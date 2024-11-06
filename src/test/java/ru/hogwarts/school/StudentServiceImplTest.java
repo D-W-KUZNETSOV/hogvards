@@ -8,15 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.service.StudentService;
+import ru.hogwarts.school.service.StudentServiceImpl;
 
-public class StudentServiceTest {
+public class StudentServiceImplTest {
 
-  private StudentService studentService;
+  private StudentServiceImpl studentServiceImpl;
 
   @BeforeEach
   public void setUp() {
-    studentService = new StudentService();
+    studentServiceImpl = StudentServiceImpl.createStudentServiceImpl();
   }
 
   @Test
@@ -25,7 +25,7 @@ public class StudentServiceTest {
     student.setName("John Doe");
     student.setAge(20);
 
-    Student addedStudent = studentService.addStudent(student);
+    Student addedStudent = studentServiceImpl.addStudent(student);
     assertNotNull(addedStudent);
     assertEquals("John Doe", addedStudent.getName());
     assertEquals(20, addedStudent.getAge());
@@ -37,9 +37,9 @@ public class StudentServiceTest {
     Student student = new Student();
     student.setName("Jane Doe");
     student.setAge(22);
-    Student addedStudent = studentService.addStudent(student);
+    Student addedStudent = studentServiceImpl.addStudent(student);
 
-    Student foundStudent = studentService.findStudent(addedStudent.getId());
+    Student foundStudent = studentServiceImpl.findStudent(addedStudent.getId());
     assertNotNull(foundStudent);
     assertEquals(addedStudent.getId(), foundStudent.getId());
     assertEquals("Jane Doe", foundStudent.getName());
@@ -50,11 +50,11 @@ public class StudentServiceTest {
     Student student = new Student();
     student.setName("Alice");
     student.setAge(21);
-    Student addedStudent = studentService.addStudent(student);
+    Student addedStudent = studentServiceImpl.addStudent(student);
 
     addedStudent.setName("Alice Updated");
     addedStudent.setAge(22);
-    Student updatedStudent = studentService.editStudent(addedStudent);
+    Student updatedStudent = studentServiceImpl.editStudent(addedStudent);
 
     assertNotNull(updatedStudent);
     assertEquals("Alice Updated", updatedStudent.getName());
@@ -68,7 +68,7 @@ public class StudentServiceTest {
     student.setName("Non-existing Student");
     student.setAge(25);
 
-    Student updatedStudent = studentService.editStudent(student);
+    Student updatedStudent = studentServiceImpl.editStudent(student);
     assertNull(updatedStudent); // Должно вернуть null, так как студент не существует
   }
 
@@ -77,14 +77,14 @@ public class StudentServiceTest {
     Student student = new Student();
     student.setName("Bob");
     student.setAge(23);
-    Student addedStudent = studentService.addStudent(student);
+    Student addedStudent = studentServiceImpl.addStudent(student);
 
-    Student deletedStudent = studentService.deleteStudent(addedStudent.getId());
+    Student deletedStudent = studentServiceImpl.deleteStudent(addedStudent.getId());
     assertNotNull(deletedStudent);
     assertEquals(addedStudent.getId(), deletedStudent.getId());
 
     // Проверяем, что студент был удален
-    Student foundStudent = studentService.findStudent(addedStudent.getId());
+    Student foundStudent = studentServiceImpl.findStudent(addedStudent.getId());
     assertNull(foundStudent); // Должно вернуть null, так как студент был удален
   }
 }
