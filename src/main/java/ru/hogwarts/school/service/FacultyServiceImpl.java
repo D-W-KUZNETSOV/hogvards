@@ -27,12 +27,6 @@ public class FacultyServiceImpl implements FacultyService {
   }
 
 
-
-  @Override
-  public Faculty editFaculty(long id, Student student) {
-    return null;
-  }
-
   public Faculty editFaculty(Faculty faculty) {
     if (!faculties.containsKey(faculty.getId())) {
       return null;
@@ -42,9 +36,8 @@ public class FacultyServiceImpl implements FacultyService {
   }
 
 
-
-  public Faculty deleteFaculty(long id) {
-    return faculties.remove(id);
+  public void deleteFaculty(long id) {
+    faculties.remove(id);
   }
 
   public Collection<Faculty> findByColor(String color) {

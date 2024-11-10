@@ -6,7 +6,10 @@ import ru.hogwarts.school.model.Student;
 public interface FacultyService {
 
   Faculty addFaculty(Faculty faculty);
+
   Faculty findFaculty(long id);
-  Faculty editFaculty(long id,Student student);
-  Faculty deleteFaculty(long id);
+
+  Faculty editFaculty(Faculty faculty);
+
+  void deleteFaculty(long id);
 }

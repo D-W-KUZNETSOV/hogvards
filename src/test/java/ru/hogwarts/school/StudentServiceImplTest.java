@@ -22,70 +22,69 @@ public class StudentServiceImplTest {
   @Test
   public void testAddStudent() {
     Student student = new Student();
-    student.setName("John Doe");
-    student.setAge(20);
+    student.setName("Garry Potter");
+    student.setAge(15);
 
     Student addedStudent = studentServiceImpl.addStudent(student);
     assertNotNull(addedStudent);
-    assertEquals("John Doe", addedStudent.getName());
-    assertEquals(20, addedStudent.getAge());
-    assertEquals(0, addedStudent.getId()); // ID должен быть 0, так как это первый студент
+    assertEquals("Garry Potter", addedStudent.getName());
+    assertEquals(15, addedStudent.getAge());
+    assertEquals(0, addedStudent.getId());
   }
 
   @Test
   public void testFindStudent() {
     Student student = new Student();
-    student.setName("Jane Doe");
-    student.setAge(22);
+    student.setName("Garry Potter");
+    student.setAge(14);
     Student addedStudent = studentServiceImpl.addStudent(student);
 
     Student foundStudent = studentServiceImpl.findStudent(addedStudent.getId());
     assertNotNull(foundStudent);
     assertEquals(addedStudent.getId(), foundStudent.getId());
-    assertEquals("Jane Doe", foundStudent.getName());
+    assertEquals("Garry Potter", foundStudent.getName());
   }
 
   @Test
   public void testEditStudent() {
     Student student = new Student();
-    student.setName("Alice");
-    student.setAge(21);
+    student.setName("Germiona Granger");
+    student.setAge(14);
     Student addedStudent = studentServiceImpl.addStudent(student);
 
-    addedStudent.setName("Alice Updated");
-    addedStudent.setAge(22);
+    addedStudent.setName("Germiona Granger Updated");
+    addedStudent.setAge(15);
     Student updatedStudent = studentServiceImpl.editStudent(addedStudent);
 
     assertNotNull(updatedStudent);
-    assertEquals("Alice Updated", updatedStudent.getName());
-    assertEquals(22, updatedStudent.getAge());
+    assertEquals("Germiona Granger Updated", updatedStudent.getName());
+    assertEquals(15, updatedStudent.getAge());
   }
 
   @Test
   public void testEditNonExistingStudent() {
     Student student = new Student();
-    student.setId(999L); // Неверный ID
-    student.setName("Non-existing Student");
+    student.setId(999L);
+    student.setName("Такого студента нет");
     student.setAge(25);
 
     Student updatedStudent = studentServiceImpl.editStudent(student);
-    assertNull(updatedStudent); // Должно вернуть null, так как студент не существует
+    assertNull(updatedStudent);
   }
 
   @Test
   public void testDeleteStudent() {
     Student student = new Student();
-    student.setName("Bob");
-    student.setAge(23);
+    student.setName("Ron Uizly");
+    student.setAge(14);
     Student addedStudent = studentServiceImpl.addStudent(student);
 
     Student deletedStudent = studentServiceImpl.deleteStudent(addedStudent.getId());
     assertNotNull(deletedStudent);
     assertEquals(addedStudent.getId(), deletedStudent.getId());
 
-    // Проверяем, что студент был удален
     Student foundStudent = studentServiceImpl.findStudent(addedStudent.getId());
-    assertNull(foundStudent); // Должно вернуть null, так как студент был удален
+    assertNull(foundStudent);
   }
 }
 

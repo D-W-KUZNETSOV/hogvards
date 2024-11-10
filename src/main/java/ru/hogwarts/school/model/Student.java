@@ -13,10 +13,8 @@ public class Student {
   private String name;
   private int age;
 
-  public Student() {
-  }
 
-  public Student(long id, String name, int age) {
+  public Student() {
     this.id = id;
     this.name = name;
     this.age = age;
@@ -24,10 +22,12 @@ public class Student {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
-    if (o == null || getClass() != o.getClass())
+    }
+    if (o == null || getClass() != o.getClass()) {
       return false;
+    }
     Student student = (Student) o;
     return id == student.id && age == student.age && Objects.equals(name, student.name);
   }
