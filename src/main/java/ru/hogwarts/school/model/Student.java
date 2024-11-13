@@ -1,23 +1,33 @@
 package ru.hogwarts.school.model;
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity(name = "Student")
 @Setter
 @Getter
 public class Student {
-
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
   private String name;
   private int age;
 
 
-  public Student() {
+  public Student(long id, String name, int age) {
     this.id = id;
     this.name = name;
     this.age = age;
+  }
+
+  public Student() {
+
   }
 
   @Override

@@ -1,23 +1,33 @@
 package ru.hogwarts.school.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity(name = "faculties")
 @Setter
 @Getter
 public class Faculty {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
 
   private long id;
   private String name;
   private String color;
 
 
-  public Faculty() {
+  private Faculty(long id, String name, String color) {
     this.id = id;
     this.name = name;
     this.color = color;
   }
+
+
+
 
   @Override
   public boolean equals(Object o) {
