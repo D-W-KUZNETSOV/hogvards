@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
@@ -11,7 +12,7 @@ public class StudentServiceImpl implements StudentService {
 
 
   private final StudentRepository studentRepository;
-
+@Autowired
   public StudentServiceImpl(StudentRepository studentRepository) {
     this.studentRepository = studentRepository;
   }
@@ -40,6 +41,6 @@ public class StudentServiceImpl implements StudentService {
 
   public Collection<Student> findByAge(int age) {
 
-    return studentRepository.findAll();
+    return studentRepository.findByAge(age);
   }
 }
