@@ -1,35 +1,50 @@
 package ru.hogwarts.school.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "faculties")
-@Setter
-@Getter
+  @Entity
+  @Setter
+  @Getter
 public class Faculty {
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
 
-  private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
   private String name;
   private String color;
 
 
-  private Faculty(long id, String name, String color) {
+  @OneToMany(mappedBy = "faculty",fetch = FetchType.LAZY)
+  private Set<Student> students;
+
+
+  private Faculty(Long id, String name, String color) {
     this.id = id;
     this.name = name;
     this.color = color;
   }
 
+  public Faculty() {
 
-
+  }
+    public void setId(Long id) {
+      this.id = id;
+    }
 
   @Override
+
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -56,4 +71,8 @@ public class Faculty {
         '}';
   }
 
-}
+
+    public Collection<Student> getStudents() {
+    return students;
+    }
+  }
