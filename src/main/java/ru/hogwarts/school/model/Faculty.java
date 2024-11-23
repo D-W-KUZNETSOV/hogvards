@@ -1,33 +1,62 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
+  @Entity
+  @Setter
+  @Getter
 public class Faculty {
 
-  private long id;
-  private String name, color;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-  public Faculty() {
-  }
+  private String name;
+  private String color;
 
-  public Faculty(long id, String name, String color) {
+
+  @OneToMany(mappedBy = "faculty",fetch = FetchType.LAZY)
+  @JsonIgnore
+  private Set<Student> students;
+
+
+  private Faculty(Long id, String name, String color) {
     this.id = id;
     this.name = name;
     this.color = color;
   }
 
+  public Faculty() {
+
+  }
+    public void setId(Long id) {
+      this.id = id;
+    }
+
   @Override
+
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
-    if (o == null || getClass() != o.getClass())
+    }
+    if (o == null || getClass() != o.getClass()) {
       return false;
+    }
     Faculty faculty = (Faculty) o;
-    return id == faculty.id && Objects.equals(name, faculty.name) && Objects.equals(color, faculty.color);
+    return id == faculty.id && Objects.equals(name, faculty.name) && Objects.equals(color,
+        faculty.color);
   }
 
   @Override
@@ -44,4 +73,8 @@ public class Faculty {
         '}';
   }
 
-}
+
+    public Collection<Student> getStudents() {
+    return students;
+    }
+  }

@@ -1,59 +1,72 @@
 package ru.hogwarts.school.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.FacultyRepository;
+
+import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
 
-  private final HashMap<Long, Faculty> faculties = new HashMap<>();
-  private long count = 0;
+  private final FacultyRepository facultyRepository;
 
-
-  public Faculty addFaculty(Faculty faculty) {
-    faculty.setId(count++);
-    faculties.put(faculty.getId(), faculty);
-    return faculty;
+  @Autowired
+  public FacultyServiceImpl(FacultyRepository facultyRepository) {
+    this.facultyRepository = facultyRepository;
   }
 
-
-  public Faculty findFaculty(long id) {
-    return faculties.get(id);
-  }
-
-
-
-  @Override
-  public Faculty editFaculty(long id, Student student) {
-    return null;
-  }
-
-  public Faculty editFaculty(Faculty faculty) {
-    if (!faculties.containsKey(faculty.getId())) {
-      return null;
-    }
-    faculties.put(faculty.getId(), faculty);
-    return faculty;
-  }
-
-
-
-  public Faculty deleteFaculty(long id) {
-    return faculties.remove(id);
+  public Optional<Faculty> findFaculty(Long id) {
+    return facultyRepository.findById(id);
   }
 
   public Collection<Faculty> findByColor(String color) {
-    ArrayList<Faculty> result = new ArrayList<>();
-    for (Faculty faculty : faculties.values()) {
-      if (Objects.equals(faculty.getColor(), color)) {
-        result.add(faculty);
-      }
+    return facultyRepository.findByColorIgnoreCase(color);
+  }
+
+  public Collection<Faculty> findByName(String name) {
+    return facultyRepository.findByNameIgnoreCase(name);
+  }
+
+  public Collection<Faculty> findAll() {
+    return facultyRepository.findAll();
+  }
+
+  public Faculty addFaculty(Faculty faculty) {
+    return facultyRepository.save(faculty);
+  }
+
+  @Override
+  public Optional<Faculty> findFaculty(long id) {
+    return Optional.empty();
+  }
+
+  public Faculty editFaculty(Faculty faculty) {
+    return facultyRepository.save(faculty);
+  }
+
+  @Override
+  public void deleteFaculty(long id) {
+
+  }
+
+  public void deleteFaculty(Long id) {
+    if (facultyRepository.existsById(id)) {
+      facultyRepository.deleteById(id);
     }
-    return result;
+  }
+  public Object getStudentsOfFaculty(Long facultyId) {
+    return  facultyRepository.findById(facultyId)
+        .map(Faculty::getStudents)
+        .orElse(null);
+  }
+  public Collection<Faculty> findByColorIgnoreCase(String color) {
+    return facultyRepository.findByColorIgnoreCase(color);
+  }
+  public Collection<Faculty> findByNameIgnoreCase(String name) {
+    return facultyRepository.findByNameIgnoreCase(name);
   }
 }
