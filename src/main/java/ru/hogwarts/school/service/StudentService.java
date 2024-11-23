@@ -12,7 +12,7 @@ public interface StudentService {
 
   Student addStudent(Student student);
 
-  Optional findStudent(long Id);
+  Optional<Student> findStudent(long Id);
 
   Student editStudent(Student student);
 

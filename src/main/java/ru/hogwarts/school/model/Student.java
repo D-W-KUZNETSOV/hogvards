@@ -11,38 +11,40 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
 @Setter
 @Getter
-public class Student {
+public final class Student {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
-
+  @NonNull
   private String name;
   private int age;
 
-
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "faculty_id", nullable = false)
+
   private Faculty faculty;
 
 
-  public Student(long id, String name, int age) {
+  private Student(long id, String name, int age) {
     this.id = id;
     this.name = name;
     this.age = age;
 
   }
 
-  public void setId(Long id) {
+  public static Student createStudent(long id, String name, int age) {
+    return new Student(id, name, age);
   }
 
-  public Student() {
-
+  public void setId(Long id) {
   }
 
   @Override
@@ -68,7 +70,6 @@ public class Student {
   }
 
 
-
   public String getName() {
     return name;
   }
@@ -85,8 +86,8 @@ public class Student {
     this.age = age;
   }
 
-  public Faculty getFaculty() {
-    return faculty;
+  public String getFaculty() {
+    return String.valueOf(faculty);
   }
 
   public void setFaculty(Faculty faculty) {

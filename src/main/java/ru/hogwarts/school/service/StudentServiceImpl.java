@@ -3,15 +3,13 @@ package ru.hogwarts.school.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public final class StudentServiceImpl implements StudentService {
+public  class StudentServiceImpl implements StudentService {
 
   private final StudentRepository studentRepository;
 
@@ -31,8 +29,9 @@ public final class StudentServiceImpl implements StudentService {
   }
 
 
+
   @Override
-  public Optional findStudent(long Id) {
+  public Optional<Student> findStudent(long Id) {
     return studentRepository.findById(Id);
   }
 
@@ -42,12 +41,13 @@ public final class StudentServiceImpl implements StudentService {
   }
 
   @Override
-  public void deleteStudent(long Id) {
+  public void deleteStudent(long id) {
+    studentRepository.deleteById( id);
 
   }
 
   @Override
-  public Collection<Student> findAll() {
+  public List<Student> findAll() {
     return List.of();
   }
 
@@ -60,7 +60,7 @@ public final class StudentServiceImpl implements StudentService {
     studentRepository.deleteById(id);
   }
 
-  public Faculty getAllFacultiesFromStudents(Long id) {
+  public String getAllFacultiesFromStudents(Long id) {
     Student student = studentRepository.findById(id).orElse(null);
     return student != null ? student.getFaculty() : null;
   }

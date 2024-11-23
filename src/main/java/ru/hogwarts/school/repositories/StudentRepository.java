@@ -8,5 +8,8 @@ import java.util.Collection;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-  List<Student> findByAgeBetween(int minAge, int maxAge);
+  List<Student> findByFacultyId(Long facultyId);
+
+  List<Student> findByAgeBetween(int min, int max);
+
 }

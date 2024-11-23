@@ -19,54 +19,47 @@ public class FacultyServiceImpl implements FacultyService {
     this.facultyRepository = facultyRepository;
   }
 
-  public Optional<Faculty> findFaculty(Long id) {
+  @Override
+  public Optional<Faculty> findFaculty(long id) {
     return facultyRepository.findById(id);
   }
 
+  @Override
   public Collection<Faculty> findByColor(String color) {
     return facultyRepository.findByColorIgnoreCase(color);
   }
 
+  @Override
   public Collection<Faculty> findByName(String name) {
     return facultyRepository.findByNameIgnoreCase(name);
   }
 
+  @Override
   public Collection<Faculty> findAll() {
     return facultyRepository.findAll();
   }
 
+  @Override
   public Faculty addFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
   }
 
   @Override
-  public Optional<Faculty> findFaculty(long id) {
-    return Optional.empty();
-  }
-
   public Faculty editFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
   }
 
   @Override
   public void deleteFaculty(long id) {
-
-  }
-
-  public void deleteFaculty(Long id) {
     if (facultyRepository.existsById(id)) {
       facultyRepository.deleteById(id);
     }
   }
-  public Object getStudentsOfFaculty(Long facultyId) {
-    return  facultyRepository.findById(facultyId)
+
+  public Collection<Student> getStudentsOfFaculty(Long facultyId) {
+    return facultyRepository.findById(facultyId)
         .map(Faculty::getStudents)
         .orElse(null);
   }
-  public Collection<Faculty> findByColorIgnoreCase(String color) {
-    return facultyRepository.findByColorIgnoreCase(color);
-  }
-  public Collection<Faculty> findByNameIgnoreCase(String name) {
-    return facultyRepository.findByNameIgnoreCase(name);
-  }
 }
+

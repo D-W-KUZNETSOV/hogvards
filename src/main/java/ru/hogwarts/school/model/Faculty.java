@@ -1,6 +1,6 @@
 package ru.hogwarts.school.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,24 +12,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
-  @Entity
-  @Setter
-  @Getter
+@Entity
+@Setter
+@Getter
 public class Faculty {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
+  @NonNull
   private String name;
   private String color;
 
-
-  @OneToMany(mappedBy = "faculty",fetch = FetchType.LAZY)
-  @JsonIgnore
-  private Set<Student> students;
+  @JsonProperty(required = true)
+  @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
+  private Collection<Student> students;
 
 
   private Faculty(Long id, String name, String color) {
@@ -38,12 +38,18 @@ public class Faculty {
     this.color = color;
   }
 
-  public Faculty() {
 
+  private static Faculty createFaculty(Long id, String name, String color) {
+    return new Faculty(id, name, color);
   }
-    public void setId(Long id) {
-      this.id = id;
-    }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   @Override
 
@@ -74,7 +80,8 @@ public class Faculty {
   }
 
 
-    public Collection<Student> getStudents() {
+  public Collection<Student> getStudents() {
     return students;
-    }
   }
+
+}
