@@ -1,6 +1,7 @@
 package ru.hogwarts.school.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,15 +21,14 @@ public class Student {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+
   private String name;
   private int age;
 
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "faculty_id")
+  @JoinColumn(name = "faculty_id", nullable = false)
   private Faculty faculty;
-
-
 
 
   public Student(long id, String name, int age) {
@@ -37,11 +37,14 @@ public class Student {
     this.age = age;
 
   }
+
   public void setId(Long id) {
   }
+
   public Student() {
 
   }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -60,8 +63,33 @@ public class Student {
     return Objects.hash(id, name, age, faculty);
   }
 
+  public Long getId() {
+    return id;
+  }
 
-  public Object getFaculty() {
+
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
+
+  public Faculty getFaculty() {
     return faculty;
+  }
+
+  public void setFaculty(Faculty faculty) {
+    this.faculty = faculty;
   }
 }

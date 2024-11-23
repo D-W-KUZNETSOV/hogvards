@@ -10,7 +10,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public class FacultyServiceImpl {
+public class FacultyServiceImpl implements FacultyService {
+
   private final FacultyRepository facultyRepository;
 
   @Autowired
@@ -38,20 +39,34 @@ public class FacultyServiceImpl {
     return facultyRepository.save(faculty);
   }
 
+  @Override
+  public Optional<Faculty> findFaculty(long id) {
+    return Optional.empty();
+  }
+
   public Faculty editFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
   }
 
-  public boolean deleteFaculty(Long id) {
+  @Override
+  public void deleteFaculty(long id) {
+
+  }
+
+  public void deleteFaculty(Long id) {
     if (facultyRepository.existsById(id)) {
       facultyRepository.deleteById(id);
-      return true;
     }
-    return false;
   }
   public Object getStudentsOfFaculty(Long facultyId) {
-    return (Collection<Student>) (Collection<Student>) facultyRepository.findById(facultyId)
+    return  facultyRepository.findById(facultyId)
         .map(Faculty::getStudents)
         .orElse(null);
+  }
+  public Collection<Faculty> findByColorIgnoreCase(String color) {
+    return facultyRepository.findByColorIgnoreCase(color);
+  }
+  public Collection<Faculty> findByNameIgnoreCase(String name) {
+    return facultyRepository.findByNameIgnoreCase(name);
   }
 }

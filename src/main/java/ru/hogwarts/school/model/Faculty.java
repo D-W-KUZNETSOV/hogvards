@@ -1,5 +1,6 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ public class Faculty {
 
 
   @OneToMany(mappedBy = "faculty",fetch = FetchType.LAZY)
+  @JsonIgnore
   private Set<Student> students;
 
 

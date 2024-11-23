@@ -9,7 +9,9 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/faculty")
+
 public class FacultyController {
+
   private final FacultyServiceImpl facultyServiceImpl;
 
   @Autowired
