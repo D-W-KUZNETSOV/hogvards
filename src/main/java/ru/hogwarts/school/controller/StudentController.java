@@ -1,14 +1,12 @@
 package ru.hogwarts.school.controller;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.service.StudentServiceImpl;
+
 import java.util.Collection;
 
 @RestController
@@ -17,30 +15,27 @@ public class StudentController {
 
   private final StudentServiceImpl studentServiceImpl;
 
-
   @Autowired
-  private StudentRepository studentRepository;
-
   public StudentController(StudentServiceImpl studentServiceImpl) {
     this.studentServiceImpl = studentServiceImpl;
   }
 
   @GetMapping("{id}")
-  public List<Student> createStudentById(@PathVariable Long id) {
-    return studentServiceImpl.addStudent();
+  public Student findStudentById(@PathVariable Long id) {
+    return studentServiceImpl.findStudent(id)
+        .orElse(null);
   }
 
-
   @PostMapping
-  public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-    Student createdStudent = studentServiceImpl.addStudent(student);
-    return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
+  public Student createStudent(
+      @RequestBody Student student) {
+    return studentServiceImpl.addStudent(student);
   }
 
   @PutMapping("{id}")
-  public Optional<Student> findStudent(@PathVariable Long id, @RequestBody Student student) {
+  public Student updateStudent(@PathVariable Long id, @RequestBody Student student) {
     student.setId(id);
-    return studentServiceImpl.findStudent(id);
+    return studentServiceImpl.editStudent(student);
   }
 
   @DeleteMapping("{id}")
@@ -53,10 +48,8 @@ public class StudentController {
     return studentServiceImpl.getStudentsByAgeBetween(min, max);
   }
 
-  @GetMapping("/{studentId}/faculty")
-  public String getFacultyByStudentId(@PathVariable Long studentId) {
-    return studentRepository.findById(studentId)
-        .map(Student::getFaculty)
-        .orElse(null);
+  @GetMapping("/{Id}/faculty")
+  public List<Student> getStudentsByFaculty(@PathVariable Long Id) {
+    return studentServiceImpl.getStudentsByFacultyId(Id);
   }
 }

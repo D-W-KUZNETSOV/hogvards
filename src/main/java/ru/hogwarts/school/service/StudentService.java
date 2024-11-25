@@ -7,20 +7,15 @@ import ru.hogwarts.school.model.Student;
 
 public interface StudentService {
 
-  List<Student> addStudent();
-
-
   Student addStudent(Student student);
 
-  Optional<Student> findStudent(long Id);
+  Optional<Student> findStudent(long id);
 
   Student editStudent(Student student);
 
-  void deleteStudent(long Id);
+  void deleteStudent(long id);
 
   Collection<Student> findAll();
 
   List<Student> getStudentsByAgeBetween(int min, int max);
-
-  void deleteStudent(Long id);
 }

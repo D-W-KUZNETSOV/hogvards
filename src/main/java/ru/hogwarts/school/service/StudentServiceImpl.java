@@ -1,15 +1,17 @@
 package ru.hogwarts.school.service;
 
-import java.util.List;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
-import java.util.Optional;
-
 @Service
-public  class StudentServiceImpl implements StudentService {
+public final class StudentServiceImpl implements StudentService {
 
   private final StudentRepository studentRepository;
 
@@ -19,49 +21,41 @@ public  class StudentServiceImpl implements StudentService {
   }
 
   @Override
-  public List<Student> addStudent() {
-    return List.of();
-  }
-
-  @Override
   public Student addStudent(Student student) {
     return studentRepository.save(student);
   }
 
-
-
   @Override
-  public Optional<Student> findStudent(long Id) {
-    return studentRepository.findById(Id);
+  public Optional<Student> findStudent(long id) {
+    return studentRepository.findById(id);
   }
 
-
+  @Override
   public Student editStudent(Student student) {
+    if (!studentRepository.existsById(student.getId())) {
+      throw new IllegalArgumentException("Student with id " + student.getId() + " does not exist.");
+    }
     return studentRepository.save(student);
   }
 
   @Override
   public void deleteStudent(long id) {
-    studentRepository.deleteById( id);
-
-  }
-
-  @Override
-  public List<Student> findAll() {
-    return List.of();
-  }
-
-  public List<Student> getStudentsByAgeBetween(int min, int max) {
-    return studentRepository.findByAgeBetween(min, max);
-  }
-
-
-  public void deleteStudent(Long id) {
+    if (!studentRepository.existsById(id)) {
+      throw new IllegalArgumentException("Student with id " + id + " does not exist.");
+    }
     studentRepository.deleteById(id);
   }
 
-  public String getAllFacultiesFromStudents(Long id) {
-    Student student = studentRepository.findById(id).orElse(null);
-    return student != null ? student.getFaculty() : null;
+  @Override
+  public Collection<Student> findAll() {
+    return studentRepository.findAll();
+  }
+
+  @Override
+  public List<Student> getStudentsByAgeBetween(int min, int max) {
+    return studentRepository.findByAgeBetween(min, max);
+  }
+  public List<Student> getStudentsByFacultyId(Long Id) {
+    return studentRepository.findByFacultyId(Id);
   }
 }

@@ -17,14 +17,13 @@ import java.util.Collection;
 @RequestMapping("/faculty")
 public class FacultyController {
   private final FacultyServiceImpl facultyServiceImpl;
+  private final StudentRepository studentRepository;
 
-  @Autowired
-  private StudentRepository studentRepository;
-
-  public FacultyController(FacultyServiceImpl facultyServiceImpl) {
+  public FacultyController(FacultyServiceImpl facultyServiceImpl,
+      StudentRepository studentRepository) {
     this.facultyServiceImpl = facultyServiceImpl;
+    this.studentRepository = studentRepository;
   }
-
   @GetMapping("{id}")
   public Faculty getFacultyInfo(@PathVariable Long id) {
     return facultyServiceImpl.findFaculty(id).orElse(null);
@@ -32,7 +31,7 @@ public class FacultyController {
 
   @GetMapping
   public Collection<Faculty> findFaculties(@RequestParam(required = false) String color,
-      @RequestParam(required = false) String name) {
+                                           @RequestParam(required = false) String name) {
     if (color != null && !color.isBlank()) {
       return facultyServiceImpl.findByColor(color);
     }
@@ -48,7 +47,8 @@ public class FacultyController {
   }
 
   @PutMapping("{id}")
-  public Faculty updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
+  public Faculty updateFaculty(@PathVariable Long id,
+      @RequestBody Faculty faculty) {
     faculty.setId(id);
     return facultyServiceImpl.editFaculty(faculty);
   }
@@ -65,9 +65,10 @@ public class FacultyController {
     }
   }
 
-  @GetMapping("/{facultyId}/students")
-  public List<Student> getStudentsByFacultyId(@PathVariable Long facultyId) {
-    return studentRepository.findByFacultyId(facultyId);
+  @GetMapping("/{Id}/students")
+  public List<Student> getStudentsByFacultyId(@PathVariable Long Id) {
+    return studentRepository.findByFacultyId(Id);
   }
+
 }
 

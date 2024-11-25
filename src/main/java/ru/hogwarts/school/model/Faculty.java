@@ -16,8 +16,7 @@ import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
-@Setter
-@Getter
+
 public class Faculty {
 
   @Id
@@ -31,16 +30,18 @@ public class Faculty {
   @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
   private Collection<Student> students;
 
+  public Faculty() {
+  }
 
-  private Faculty(Long id, String name, String color) {
-    this.id = id;
+  private Faculty( String name, String color) {
+
     this.name = name;
     this.color = color;
   }
 
 
-  private static Faculty createFaculty(Long id, String name, String color) {
-    return new Faculty(id, name, color);
+  public Collection<Student> getStudents() {
+    return students;
   }
 
   public String getName() {
@@ -80,8 +81,23 @@ public class Faculty {
   }
 
 
-  public Collection<Student> getStudents() {
-    return students;
+  public Long getId() {
+    return id;
   }
 
+  public void setName(@NonNull String name) {
+    this.name = name;
+  }
+
+  public String getColor() {
+    return color;
+  }
+
+  public void setColor(String color) {
+    this.color = color;
+  }
+
+  public void setStudents(Collection<Student> students) {
+    this.students = students;
+  }
 }

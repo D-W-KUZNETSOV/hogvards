@@ -10,41 +10,31 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
 
-@Entity
-@Setter
-@Getter
-public final class Student {
+
+@Entity(name = "Student")
+
+public class Student {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
-  @NonNull
+
   private String name;
   private int age;
 
-  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "faculty_id", nullable = false)
-
+  @JoinColumn(name = "faculty_id")
+  @JsonIgnore
   private Faculty faculty;
 
-
-  private Student(long id, String name, int age) {
-    this.id = id;
+  public Student(String name, int age) {
     this.name = name;
     this.age = age;
-
   }
 
-  public static Student createStudent(long id, String name, int age) {
-    return new Student(id, name, age);
-  }
+  public Student() {
 
-  public void setId(Long id) {
   }
 
   @Override
@@ -65,10 +55,28 @@ public final class Student {
     return Objects.hash(id, name, age, faculty);
   }
 
-  public Long getId() {
+  @Override
+  public String toString() {
+    return "Student{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", age=" + age +
+        ", faculty=" + faculty +
+        '}';
+  }
+
+
+  public Faculty getFaculty() {
+    return faculty;
+  }
+
+  public long getId() {
     return id;
   }
 
+  public void setId(long id) {
+    this.id = id;
+  }
 
   public String getName() {
     return name;
@@ -84,10 +92,6 @@ public final class Student {
 
   public void setAge(int age) {
     this.age = age;
-  }
-
-  public String getFaculty() {
-    return String.valueOf(faculty);
   }
 
   public void setFaculty(Faculty faculty) {
