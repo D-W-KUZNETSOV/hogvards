@@ -8,12 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
+
 
 @Entity
 
@@ -22,6 +19,7 @@ public class Faculty {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   @NonNull
   private String name;
   private String color;
@@ -33,7 +31,7 @@ public class Faculty {
   public Faculty() {
   }
 
-  private Faculty( String name, String color) {
+  private Faculty(String name, String color) {
 
     this.name = name;
     this.color = color;
