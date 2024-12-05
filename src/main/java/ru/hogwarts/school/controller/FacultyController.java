@@ -41,9 +41,10 @@ public class FacultyController {
     return facultyServiceImpl.findAll();
   }
 
-  @PostMapping
-  public Faculty createFaculty(@RequestBody Faculty faculty) {
-    return facultyServiceImpl.addFaculty(faculty);
+  @PostMapping("/faculties")
+  public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+    Faculty savedFaculty = facultyServiceImpl.addFaculty(faculty);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedFaculty);
   }
 
   @PutMapping("{id}")

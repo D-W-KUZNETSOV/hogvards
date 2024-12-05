@@ -1,14 +1,15 @@
 package ru.hogwarts.school.service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
-
-import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -36,13 +37,9 @@ public class FacultyServiceImpl implements FacultyService {
     return facultyRepository.findAll();
   }
 
+  @Override
   public Faculty addFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
-  }
-
-  @Override
-  public Optional<Faculty> findFaculty(long id) {
-    return Optional.empty();
   }
 
   public Faculty editFaculty(Faculty faculty) {
@@ -51,17 +48,14 @@ public class FacultyServiceImpl implements FacultyService {
 
   @Override
   public void deleteFaculty(long id) {
-
-  }
-
-  public void deleteFaculty(Long id) {
     if (facultyRepository.existsById(id)) {
       facultyRepository.deleteById(id);
     }
   }
 
-  public List<Student> getStudentsOfFaculty(Long id) {
-    Optional<Faculty> facultyOptional = facultyRepository.findById(id);
-    return (List<Student>) facultyOptional.get().getStudents();
+  public Collection<Student> getStudentsOfFaculty(Long id) {
+    return facultyRepository.findById(id)
+            .map(Faculty::getStudents)
+            .orElseGet(List::of);
   }
 }
