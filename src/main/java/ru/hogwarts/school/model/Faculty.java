@@ -1,80 +1,80 @@
 package ru.hogwarts.school.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
-  @Entity
-  @Setter
-  @Getter
+
+@Setter
+@Getter
+@Entity
+
 public class Faculty {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  private String name;
-  private String color;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
 
-  @OneToMany(mappedBy = "faculty",fetch = FetchType.LAZY)
-  @JsonIgnore
-  private Set<Student> students;
+    private String name;
+    private String color;
 
+    @JsonProperty(required = true)
+    @OneToMany( fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Student> students;
 
-  private Faculty(Long id, String name, String color) {
-    this.id = id;
-    this.name = name;
-    this.color = color;
-  }
-
-  public Faculty() {
-
-  }
-    public void setId(Long id) {
-      this.id = id;
+    private Faculty() {
     }
 
-  @Override
+    private Faculty(Long id, String name, String color, Collection<Student> students) {
 
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+        this.name = name;
+        this.color = color;
+        this.students = students;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+
+
+    public static Faculty newFaculty() {
+        return new Faculty();
     }
-    Faculty faculty = (Faculty) o;
-    return id == faculty.id && Objects.equals(name, faculty.name) && Objects.equals(color,
-        faculty.color);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, color);
-  }
-
-  @Override
-  public String toString() {
-    return "Faculty{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", color='" + color + '\'' +
-        '}';
-  }
 
 
-    public Collection<Student> getStudents() {
-    return students;
+    @Override
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Faculty faculty = (Faculty) o;
+        return id == faculty.id && Objects.equals(name, faculty.name) && Objects.equals(color,
+                faculty.color);
     }
-  }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, color);
+    }
+
+    @Override
+    public String toString() {
+        return "Faculty{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                '}';
+    }
+
+
+}
