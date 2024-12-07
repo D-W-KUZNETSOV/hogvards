@@ -4,17 +4,16 @@ package ru.hogwarts.school.controller;
 import java.util.Collections;
 import java.util.List;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyServiceImpl;
 import ru.hogwarts.school.service.StudentServiceImpl;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
@@ -30,35 +29,40 @@ public class StudentController {
         this.studentServiceImpl = studentServiceImpl;
     }
 
-    @GetMapping("{id}")
-    public Student findStudentById(@PathVariable Long id) {
-        return studentServiceImpl.findStudent(id)
-                .orElse(null);
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> findStudentById(@PathVariable Long id) {
+        Optional<Student> student = studentServiceImpl.findStudent(id);
+        return student.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).build());
     }
 
-    @PostMapping("/Student")
-    public ResponseEntity<Student> addStudent(@RequestBody Student student, @RequestParam Long facultyId) {
-        Faculty faculty = facultyServiceImpl.findFaculty(facultyId)
-                .orElseThrow(() -> new EntityNotFoundException("Faculty not found with id " + facultyId));
-        student.setFaculty(faculty);
-        Student savedStudent = studentServiceImpl.addStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedStudent);
+    @PostMapping
+    public Student saveStudent(@RequestBody Student student) {
+        student.getId();
+        return studentServiceImpl.addStudent(student);
     }
 
     @PutMapping("{id}")
     public Student updateStudent(@PathVariable Long id, @RequestBody Student student) {
         student.setId(id);
-        return studentServiceImpl.editStudent(student);
+        return studentServiceImpl.putStudent(student);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteStudent(@PathVariable Long id) {
-        studentServiceImpl.deleteStudent(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        if (studentServiceImpl.existsById(id)) {
+            studentServiceImpl.deleteStudent(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
+
 
     @GetMapping("/age-between")
-    public Collection<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
-        return studentServiceImpl.getStudentsByAgeBetween(min, max);
+    public ResponseEntity<List<Student>> getStudentsByAgeBetween(@RequestParam int minAge, @RequestParam int maxAge) {
+        List<Student> students = studentServiceImpl.getStudentsByAgeBetween(minAge, maxAge);
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{id}/Faculty")

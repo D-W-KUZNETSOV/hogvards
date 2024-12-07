@@ -12,11 +12,7 @@ import lombok.Setter;
 
 import java.util.Objects;
 
-
-@Setter
-@Getter
-@Entity(name = "Student")
-
+@Entity(name = "student")
 public class Student {
 
     @Id
@@ -26,19 +22,22 @@ public class Student {
     private String name;
     private int age;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-    public Student(String name, int age) {
+    public Student(long id, String name, int age, Faculty faculty) {
+        this.id = id;
         this.name = name;
         this.age = age;
+        this.faculty = faculty;
     }
+
 
     public Student() {
 
     }
-
 
     @Override
     public String toString() {
@@ -64,6 +63,35 @@ public class Student {
         return Objects.hash(id, name, age, faculty);
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
     public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 }

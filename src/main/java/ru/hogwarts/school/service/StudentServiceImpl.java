@@ -8,12 +8,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
 @Service
 public final class StudentServiceImpl implements StudentService {
+
 
     private final StudentRepository studentRepository;
 
@@ -27,6 +27,10 @@ public final class StudentServiceImpl implements StudentService {
         if (student.getFaculty() == null) {
             throw new IllegalArgumentException("Faculty cannot be null");
         }
+        if (student.equals(student.getName())) {
+            throw new IllegalArgumentException("A student with that name already exists");
+        }
+
         return studentRepository.save(student);
     }
 
@@ -37,7 +41,7 @@ public final class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student editStudent(Student student) {
+    public Student putStudent(Student student) throws EntityNotFoundException {
         if (!studentRepository.existsById(student.getId())) {
             throw new EntityNotFoundException("Student with id " + student.getId() + " does not exist.");
         }
@@ -45,10 +49,12 @@ public final class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void deleteStudent(long id) {
-        if (!studentRepository.existsById(id)) {
-            throw new IllegalArgumentException("Student with id " + id + " does not exist.");
-        }
+    public boolean existsById(Long id) {
+        return studentRepository.existsById(id); // Используйте метод из JpaRepository
+    }
+
+    @Override
+    public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
     }
 
@@ -58,10 +64,11 @@ public final class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getStudentsByAgeBetween(int min, int max) {
-        return studentRepository.findByAgeBetween(min, max);
+    public List<Student> getStudentsByAgeBetween(int minAge, int maxAge) {
+        return studentRepository.findByAgeBetween(minAge, maxAge);
     }
 
+    @Override
     public List<Student> getStudentsByFacultyId(Long Id) {
         return studentRepository.findByFacultyId(Id);
     }

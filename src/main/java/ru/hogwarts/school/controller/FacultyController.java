@@ -1,7 +1,8 @@
 package ru.hogwarts.school.controller;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,21 +10,28 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
 import ru.hogwarts.school.repositories.StudentRepository;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.FacultyServiceImpl;
 
 import java.util.Collection;
 
+@Getter
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
+  private final FacultyRepository facultyRepository;
   private final FacultyServiceImpl facultyServiceImpl;
+
+
   private final StudentRepository studentRepository;
 
-  public FacultyController(FacultyServiceImpl facultyServiceImpl,
-      StudentRepository studentRepository) {
+  public FacultyController(FacultyRepository facultyRepository, FacultyServiceImpl facultyServiceImpl, StudentRepository studentRepository) {
+    this.facultyRepository = facultyRepository;
     this.facultyServiceImpl = facultyServiceImpl;
     this.studentRepository = studentRepository;
   }
+
+
   @GetMapping("{id}")
   public Faculty getFacultyInfo(@PathVariable Long id) {
     return facultyServiceImpl.findFaculty(id).orElse(null);
@@ -41,9 +49,9 @@ public class FacultyController {
     return facultyServiceImpl.findAll();
   }
 
-  @PostMapping("/faculties")
-  public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-    Faculty savedFaculty = facultyServiceImpl.addFaculty(faculty);
+  @PostMapping
+  public ResponseEntity<Faculty> addFaculty(@RequestBody Faculty faculty) {
+    Faculty savedFaculty = facultyRepository.save(faculty);
     return ResponseEntity.status(HttpStatus.CREATED).body(savedFaculty);
   }
 

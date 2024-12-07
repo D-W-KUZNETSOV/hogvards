@@ -8,20 +8,18 @@ import java.util.Collection;
 import java.util.Objects;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+
 
 
 @Setter
 @Getter
 @Entity
-
+@Table(name = "faculty")
 public class Faculty {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     private String name;
     private String color;
@@ -31,7 +29,7 @@ public class Faculty {
     @JsonIgnore
     private Collection<Student> students;
 
-    private Faculty() {
+    public Faculty() {
     }
 
     private Faculty(Long id, String name, String color, Collection<Student> students) {

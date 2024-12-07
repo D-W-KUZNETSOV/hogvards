@@ -12,7 +12,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
 
 @Service
-public class FacultyServiceImpl implements FacultyService {
+public class FacultyServiceImpl implements  FacultyService {
 
   private final FacultyRepository facultyRepository;
 
@@ -21,18 +21,22 @@ public class FacultyServiceImpl implements FacultyService {
     this.facultyRepository = facultyRepository;
   }
 
+  @Override
   public Optional<Faculty> findFaculty(Long id) {
     return facultyRepository.findById(id);
   }
 
+  @Override
   public Collection<Faculty> findByColor(String color) {
     return facultyRepository.findByColorIgnoreCase(color);
   }
 
+  @Override
   public Collection<Faculty> findByName(String name) {
     return facultyRepository.findByNameIgnoreCase(name);
   }
 
+  @Override
   public Collection<Faculty> findAll() {
     return facultyRepository.findAll();
   }
@@ -42,6 +46,7 @@ public class FacultyServiceImpl implements FacultyService {
     return facultyRepository.save(faculty);
   }
 
+  @Override
   public Faculty editFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
   }
@@ -53,6 +58,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
   }
 
+  @Override
   public Collection<Student> getStudentsOfFaculty(Long id) {
     return facultyRepository.findById(id)
             .map(Faculty::getStudents)
