@@ -15,7 +15,7 @@ import ru.hogwarts.school.service.FacultyServiceImpl;
 
 import java.util.Collection;
 
-@Getter
+
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
@@ -55,28 +55,25 @@ public class FacultyController {
     return ResponseEntity.status(HttpStatus.CREATED).body(savedFaculty);
   }
 
-  @PutMapping("{id}")
+  @PutMapping("/{id}")
   public Faculty updateFaculty(@PathVariable Long id,
       @RequestBody Faculty faculty) {
     faculty.setId(id);
     return facultyServiceImpl.editFaculty(faculty);
   }
 
-  @DeleteMapping("{id}")
-  public ResponseEntity<Object> deleteFaculty(@PathVariable Long id) {
-    try {
-      facultyServiceImpl.deleteFaculty(id);
-      return ResponseEntity.noContent().build();
-    } catch (Exception e) {
-
-      System.err.println("Ошибка при удалении факультета: " + e.getMessage());
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
+    if (!facultyServiceImpl.existsById(id)) {
+      return ResponseEntity.notFound().build();
     }
+    facultyServiceImpl.deleteFaculty(id);
+    return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/{Id}/students")
-  public List<Student> getStudentsByFacultyId(@PathVariable Long Id) {
-    return studentRepository.findByFacultyId(Id);
+  @GetMapping("/{id}/students")
+  public List<Student> getStudentsByFacultyId(@PathVariable Long id) {
+    return studentRepository.findByFacultyId(id);
   }
 
 }

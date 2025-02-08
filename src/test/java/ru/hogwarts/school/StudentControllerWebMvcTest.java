@@ -22,6 +22,7 @@ import ru.hogwarts.school.service.StudentServiceImpl;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudentControllerWebMvcTest {
     @Autowired
     private MockMvc mockMvc;
+
+
 
     @MockBean
     private StudentRepository studentRepository;
@@ -43,34 +46,57 @@ public class StudentControllerWebMvcTest {
     @SpyBean
     private FacultyServiceImpl facultyServiceImpl;
 
+    @InjectMocks
+    private StudentController studentController;
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void saveStudent() throws Exception {
+    public void testPostStudent() throws Exception {
+
+        JSONObject studentObjekt = new JSONObject();
+        studentObjekt.put("name", "Garry Potter");
+        studentObjekt.put("age", 15);
+        studentObjekt.put("facultyId", "id");
 
         Faculty faculty = new Faculty();
-        faculty.setId(1L);
         faculty.setName("Grifindor");
+        faculty.setColor("Red");
+
+        when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
 
 
         Student student = new Student();
-        student.setName("Garri Potter");
         student.setAge(15);
+        student.setName("Garry Potter");
         student.setFaculty(faculty);
 
-
         when(studentRepository.save(any(Student.class))).thenReturn(student);
-        when(facultyRepository.findById(1L)).thenReturn(Optional.of(faculty));
-
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/student")
                         .content(objectMapper.writeValueAsString(student))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Garri Potter"))
-                .andExpect(jsonPath("$.age").value(15));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Garry Potter"))
+                .andExpect(jsonPath("$.age").value(15))
+                .andExpect(jsonPath("$.faculty.name").value("Grifindor"));
+
+
+        verify(studentRepository).save(any(Student.class));
     }
 
+
+    // mockMvc.perform(MockMvcRequestBuilders
+    //                .get("/student/"+student.getId())
+    //                .accept(MediaType.APPLICATION_JSON))
+    //        .andExpect(status().isOk())
+    //        .andExpect(jsonPath("$.name").value("Garry Potter"))
+    //        .andExpect(jsonPath("$.age").value(15));
+
+
 }
+
+
+

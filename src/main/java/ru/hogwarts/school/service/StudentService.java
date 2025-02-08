@@ -22,7 +22,9 @@ public interface StudentService {
 
     Collection<Student> findAll();
 
-    Collection<Student> getStudentsByAgeBetween(int minAge, int maxAge);
+    List<Student> getStudentsByAgeBetween(int min, int max);
 
-    List<Student> getStudentsByFacultyId(Long Id);
+    List<Student> findByAgeBetween(int minAge, int maxAge);
+
+    List<Student> getStudentsByFacultyId(Long id);
 }

@@ -12,7 +12,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
 @Service
-public final class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl implements StudentService {
 
 
     private final StudentRepository studentRepository;
@@ -50,7 +50,7 @@ public final class StudentServiceImpl implements StudentService {
 
     @Override
     public boolean existsById(Long id) {
-        return studentRepository.existsById(id); // Используйте метод из JpaRepository
+        return studentRepository.existsById(id);
     }
 
     @Override
@@ -64,12 +64,16 @@ public final class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getStudentsByAgeBetween(int minAge, int maxAge) {
-        return studentRepository.findByAgeBetween(minAge, maxAge);
+    public List<Student> getStudentsByAgeBetween(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
     }
 
     @Override
-    public List<Student> getStudentsByFacultyId(Long Id) {
-        return studentRepository.findByFacultyId(Id);
+    public List<Student> findByAgeBetween(int minAge, int maxAge) {
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    public List<Student> getStudentsByFacultyId(Long facultyId) {
+        return studentRepository.findByFacultyId(facultyId);
     }
 }

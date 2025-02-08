@@ -22,4 +22,7 @@ public interface FacultyService {
     void deleteFaculty(long id);
 
     Collection<Student> getStudentsOfFaculty(Long id);
+
+    boolean existsById(Long id);
+
 }

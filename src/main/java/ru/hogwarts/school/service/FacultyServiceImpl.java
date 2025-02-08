@@ -50,6 +50,9 @@ public class FacultyServiceImpl implements  FacultyService {
   public Faculty editFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
   }
+  public boolean existsById(Long id) {
+    return facultyRepository.existsById(id);
+  }
 
   @Override
   public void deleteFaculty(long id) {

@@ -1,12 +1,8 @@
 package ru.hogwarts.school.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,12 +15,16 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "Name is required") // Обязательное поле
     private String name;
+
+    @NotNull(message = "Age is required") // Обязательное поле
+    @Min(value = 1, message = "Age must be a positive number") // Возраст должен быть положительным
     private int age;
 
-
+    @NotNull(message = "Faculty is required") // Обязательное поле
     @ManyToOne
-    @JoinColumn(name = "faculty_id")
+    @JoinColumn(name = "faculty_id", nullable = false) // Столбец в базе данных не может быть null
     private Faculty faculty;
 
     public Student(long id, String name, int age, Faculty faculty) {
@@ -34,9 +34,7 @@ public class Student {
         this.faculty = faculty;
     }
 
-
     public Student() {
-
     }
 
     @Override
@@ -48,7 +46,6 @@ public class Student {
                 ", faculty=" + faculty +
                 '}';
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -63,6 +60,7 @@ public class Student {
         return Objects.hash(id, name, age, faculty);
     }
 
+    // Геттеры и сеттеры
     public long getId() {
         return id;
     }
@@ -95,3 +93,5 @@ public class Student {
         this.faculty = faculty;
     }
 }
+
+
