@@ -1,16 +1,18 @@
 package ru.hogwarts.school.service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
 
-import java.util.Collection;
-import java.util.Optional;
-
 @Service
-public class FacultyServiceImpl implements FacultyService {
+public class FacultyServiceImpl implements  FacultyService {
 
   private final FacultyRepository facultyRepository;
 
@@ -19,54 +21,50 @@ public class FacultyServiceImpl implements FacultyService {
     this.facultyRepository = facultyRepository;
   }
 
+  @Override
   public Optional<Faculty> findFaculty(Long id) {
     return facultyRepository.findById(id);
   }
 
+  @Override
   public Collection<Faculty> findByColor(String color) {
     return facultyRepository.findByColorIgnoreCase(color);
   }
 
+  @Override
   public Collection<Faculty> findByName(String name) {
     return facultyRepository.findByNameIgnoreCase(name);
   }
 
+  @Override
   public Collection<Faculty> findAll() {
     return facultyRepository.findAll();
   }
 
+  @Override
   public Faculty addFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
   }
 
   @Override
-  public Optional<Faculty> findFaculty(long id) {
-    return Optional.empty();
-  }
-
   public Faculty editFaculty(Faculty faculty) {
     return facultyRepository.save(faculty);
+  }
+  public boolean existsById(Long id) {
+    return facultyRepository.existsById(id);
   }
 
   @Override
   public void deleteFaculty(long id) {
-
-  }
-
-  public void deleteFaculty(Long id) {
     if (facultyRepository.existsById(id)) {
       facultyRepository.deleteById(id);
     }
   }
-  public Object getStudentsOfFaculty(Long facultyId) {
-    return  facultyRepository.findById(facultyId)
-        .map(Faculty::getStudents)
-        .orElse(null);
-  }
-  public Collection<Faculty> findByColorIgnoreCase(String color) {
-    return facultyRepository.findByColorIgnoreCase(color);
-  }
-  public Collection<Faculty> findByNameIgnoreCase(String name) {
-    return facultyRepository.findByNameIgnoreCase(name);
+
+  @Override
+  public Collection<Student> getStudentsOfFaculty(Long id) {
+    return facultyRepository.findById(id)
+            .map(Faculty::getStudents)
+            .orElseGet(List::of);
   }
 }

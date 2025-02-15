@@ -1,23 +1,36 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.FacultyRepository;
+import ru.hogwarts.school.repositories.StudentRepository;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.FacultyServiceImpl;
 
 import java.util.Collection;
 
+
 @RestController
 @RequestMapping("/faculty")
-
 public class FacultyController {
-
+  private final FacultyRepository facultyRepository;
   private final FacultyServiceImpl facultyServiceImpl;
 
-  @Autowired
-  public FacultyController(FacultyServiceImpl facultyServiceImpl) {
+
+  private final StudentRepository studentRepository;
+
+  public FacultyController(FacultyRepository facultyRepository, FacultyServiceImpl facultyServiceImpl, StudentRepository studentRepository) {
+    this.facultyRepository = facultyRepository;
     this.facultyServiceImpl = facultyServiceImpl;
+    this.studentRepository = studentRepository;
   }
+
 
   @GetMapping("{id}")
   public Faculty getFacultyInfo(@PathVariable Long id) {
@@ -26,7 +39,7 @@ public class FacultyController {
 
   @GetMapping
   public Collection<Faculty> findFaculties(@RequestParam(required = false) String color,
-      @RequestParam(required = false) String name) {
+                                           @RequestParam(required = false) String name) {
     if (color != null && !color.isBlank()) {
       return facultyServiceImpl.findByColor(color);
     }
@@ -37,23 +50,31 @@ public class FacultyController {
   }
 
   @PostMapping
-  public Faculty createFaculty(@RequestBody Faculty faculty) {
-    return facultyServiceImpl.addFaculty(faculty);
+  public ResponseEntity<Faculty> addFaculty(@RequestBody Faculty faculty) {
+    Faculty savedFaculty = facultyRepository.save(faculty);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedFaculty);
   }
 
-  @PutMapping("{id}")
-  public Faculty updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
+  @PutMapping("/{id}")
+  public Faculty updateFaculty(@PathVariable Long id,
+      @RequestBody Faculty faculty) {
     faculty.setId(id);
     return facultyServiceImpl.editFaculty(faculty);
   }
 
-  @DeleteMapping("{id}")
-  public void deleteFaculty(@PathVariable Long id) {
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
+    if (!facultyServiceImpl.existsById(id)) {
+      return ResponseEntity.notFound().build();
+    }
     facultyServiceImpl.deleteFaculty(id);
+    return ResponseEntity.noContent().build();
   }
-  @GetMapping("{id}/students")
-  public Object getStudentsOfFaculty(@PathVariable Long id) {
-    return facultyServiceImpl.getStudentsOfFaculty(id);
+
+  @GetMapping("/{id}/students")
+  public List<Student> getStudentsByFacultyId(@PathVariable Long id) {
+    return studentRepository.findByFacultyId(id);
   }
+
 }
 

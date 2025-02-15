@@ -1,95 +1,97 @@
 package ru.hogwarts.school.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.util.Objects;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Setter
-@Getter
+import java.util.Objects;
+
+@Entity(name = "student")
 public class Student {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-  private String name;
-  private int age;
+    @NotNull(message = "Name is required") // Обязательное поле
+    private String name;
 
+    @NotNull(message = "Age is required") // Обязательное поле
+    @Min(value = 1, message = "Age must be a positive number") // Возраст должен быть положительным
+    private int age;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "faculty_id", nullable = false)
-  private Faculty faculty;
+    @NotNull(message = "Faculty is required") // Обязательное поле
+    @ManyToOne
+    @JoinColumn(name = "faculty_id", nullable = false) // Столбец в базе данных не может быть null
+    private Faculty faculty;
 
-
-  public Student(long id, String name, int age) {
-    this.id = id;
-    this.name = name;
-    this.age = age;
-
-  }
-
-  public void setId(Long id) {
-  }
-
-  public Student() {
-
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public Student(long id, String name, int age, Faculty faculty) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.faculty = faculty;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public Student() {
     }
-    Student student = (Student) o;
-    return id == student.id && age == student.age && Objects.equals(name, student.name)
-        && Objects.equals(faculty, student.faculty);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, age, faculty);
-  }
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", faculty=" + faculty +
+                '}';
+    }
 
-  public Long getId() {
-    return id;
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return id == student.id && age == student.age && Objects.equals(name, student.name) && Objects.equals(faculty, student.faculty);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, age, faculty);
+    }
 
+    // Геттеры и сеттеры
+    public long getId() {
+        return id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public int getAge() {
-    return age;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setAge(int age) {
-    this.age = age;
-  }
+    public int getAge() {
+        return age;
+    }
 
-  public Faculty getFaculty() {
-    return faculty;
-  }
+    public void setAge(int age) {
+        this.age = age;
+    }
 
-  public void setFaculty(Faculty faculty) {
-    this.faculty = faculty;
-  }
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 }
+
+

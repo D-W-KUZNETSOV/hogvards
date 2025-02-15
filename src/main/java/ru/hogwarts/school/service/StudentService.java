@@ -3,24 +3,28 @@ package ru.hogwarts.school.service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.persistence.EntityNotFoundException;
 import ru.hogwarts.school.model.Student;
 
 public interface StudentService {
 
-  List<Student> addStudent();
+    Student addStudent(Student student);
+
+    Optional<Student> findStudent(long id);
+
+    Student putStudent(Student student) throws EntityNotFoundException;
 
 
-  Student addStudent(Student student);
+    boolean existsById(Long id);
 
-  Optional findStudent(long Id);
+    void deleteStudent(Long id);
 
-  Student editStudent(Student student);
+    Collection<Student> findAll();
 
-  void deleteStudent(long Id);
+    List<Student> getStudentsByAgeBetween(int min, int max);
 
-  Collection<Student> findAll();
+    List<Student> findByAgeBetween(int minAge, int maxAge);
 
-  List<Student> getStudentsByAgeBetween(int min, int max);
-
-  void deleteStudent(Long id);
+    List<Student> getStudentsByFacultyId(Long id);
 }
